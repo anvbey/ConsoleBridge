@@ -1,11 +1,9 @@
-// src/consoles/digico/types.ts
-
 export interface DigicoEQBand {
-  band: number;           // 1–4 (we can map from bandNumber 0–3)
-  gain: number;           // dB
-  frequencyHz: number;    // Hz
+  band: number;        // 1..4
+  gain: number;
+  frequencyHz: number;
   q: number;
-  bandType: number;       // raw bandType for now
+  bandType: number;
 }
 
 export interface DigicoDynamics {
@@ -16,14 +14,14 @@ export interface DigicoDynamics {
   release: number | null;
   hold: number | null;
   gain: number | null;
-  range: number | null;   // gate range mainly
+  range: number | null;
 }
 
 export interface DigicoChannel {
   channelNumber: number;
   name: string;
-  preampGain: number | null;   // from Channel.gain
-  eqBands: DigicoEQBand[];     // 4 bands (or more later)
+  preampGain: number | null;
+  eqBands: DigicoEQBand[];
   comp: DigicoDynamics;
   gate: DigicoDynamics;
 }

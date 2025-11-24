@@ -1,10 +1,13 @@
+import React from "react";
 import type { MidasSession } from "../../consoles/midas/types";
 
 interface Props {
   preview: MidasSession;
+  selectedChannel?: number | null;
+  onSelectChannel?: (chIndex: number) => void;
 }
 
-export function MidasPreview({ preview }: Props) {
+export function MidasPreview({ preview, selectedChannel, onSelectChannel }: Props) {
   const channels = preview.channels ?? [];
 
   if (channels.length === 0) {
@@ -12,8 +15,7 @@ export function MidasPreview({ preview }: Props) {
       <div className="viewer-panel" style={{ marginTop: "1rem" }}>
         <h2>Midas Parsed View</h2>
         <p style={{ fontSize: "0.9rem", color: "#9ca3af" }}>
-          No channels were parsed. Check that the file is a valid Midas
-          session, and adjust the parser if the format differs.
+          No channels were parsed. Check parser / file.
         </p>
       </div>
     );
@@ -39,7 +41,7 @@ export function MidasPreview({ preview }: Props) {
             width: "100%",
             borderCollapse: "collapse",
             fontSize: "0.78rem",
-            minWidth: "900px", // allow horizontal scroll
+            minWidth: "900px",
           }}
         >
           <thead>
@@ -57,10 +59,15 @@ export function MidasPreview({ preview }: Props) {
           </thead>
           <tbody>
             {channels.map((ch) => {
-              const eqByBand = new Map(
-                ch.eqBands.map((b) => [b.band, b])
-              );
+              const isSelected = selectedChannel === ch.index;
 
+              const baseCell: React.CSSProperties = {
+                padding: "0.35rem 0.6rem",
+                borderTop: "1px solid #1e293b",
+                background: isSelected ? "#111827" : "transparent",
+              };
+
+              const eqByBand = new Map(ch.eqBands.map((b) => [b.band, b]));
               const eqCell = (band: number) => {
                 const b = eqByBand.get(band);
                 if (!b) return "-";
@@ -70,58 +77,31 @@ export function MidasPreview({ preview }: Props) {
               const c = ch.comp;
               const g = ch.gate;
 
-              const compText = c.threshold === null
-                ? "-"
-                : `Th ${c.threshold} | Rt ${c.ratio} | G ${c.gain} | Atk ${c.attack} | Hold ${c.hold} | Rel ${c.release}`;
+              const compText =
+                c.threshold === null
+                  ? "-"
+                  : `Th ${c.threshold} | Rt ${c.ratio} | G ${c.gain} | Atk ${c.attack} | Hold ${c.hold} | Rel ${c.release}`;
 
-              const gateText = g.threshold === null
-                ? "-"
-                : `Th ${g.threshold} | Rng ${g.range} | Atk ${g.attack} | Hold ${g.hold} | Rel ${g.release}`;
+              const gateText =
+                g.threshold === null
+                  ? "-"
+                  : `Th ${g.threshold} | Rng ${g.range} | Atk ${g.attack} | Hold ${g.hold} | Rel ${g.release}`;
+
+              const handleClick = () => {
+                onSelectChannel && onSelectChannel(ch.index);
+              };
 
               return (
-                <tr key={ch.index}>
-                  <td
-                    style={{
-                      padding: "0.35rem 0.6rem",
-                      borderTop: "1px solid #1e293b",
-                    }}
-                  >
-                    {ch.index}
-                  </td>
-                  <td
-                    style={{
-                      padding: "0.35rem 0.6rem",
-                      borderTop: "1px solid #1e293b",
-                    }}
-                  >
-                    {ch.name || "-"}
-                  </td>
-                  <td
-                    style={{
-                      padding: "0.35rem 0.6rem",
-                      borderTop: "1px solid #1e293b",
-                    }}
-                  >
-                    {ch.preampGain ?? "-"} dB
-                  </td>
-                  <td style={{ padding: "0.35rem 0.6rem", borderTop: "1px solid #1e293b" }}>
-                    {eqCell(1)}
-                  </td>
-                  <td style={{ padding: "0.35rem 0.6rem", borderTop: "1px solid #1e293b" }}>
-                    {eqCell(2)}
-                  </td>
-                  <td style={{ padding: "0.35rem 0.6rem", borderTop: "1px solid #1e293b" }}>
-                    {eqCell(3)}
-                  </td>
-                  <td style={{ padding: "0.35rem 0.6rem", borderTop: "1px solid #1e293b" }}>
-                    {eqCell(4)}
-                  </td>
-                  <td style={{ padding: "0.35rem 0.6rem", borderTop: "1px solid #1e293b" }}>
-                    {compText}
-                  </td>
-                  <td style={{ padding: "0.35rem 0.6rem", borderTop: "1px solid #1e293b" }}>
-                    {gateText}
-                  </td>
+                <tr key={ch.index} onClick={handleClick} style={{ cursor: "pointer" }}>
+                  <td style={baseCell}>{ch.index}</td>
+                  <td style={baseCell}>{ch.name || "-"}</td>
+                  <td style={baseCell}>{ch.preampGain ?? "-"} dB</td>
+                  <td style={baseCell}>{eqCell(1)}</td>
+                  <td style={baseCell}>{eqCell(2)}</td>
+                  <td style={baseCell}>{eqCell(3)}</td>
+                  <td style={baseCell}>{eqCell(4)}</td>
+                  <td style={baseCell}>{compText}</td>
+                  <td style={baseCell}>{gateText}</td>
                 </tr>
               );
             })}

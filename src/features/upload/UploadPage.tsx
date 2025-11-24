@@ -1,8 +1,9 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { ConsoleSelect } from "./components/ConsoleSelect";
 import { FileInput } from "./components/FileInput";
 import { RawViewer } from "../viewer/RawViewer";
 import { MidasPreview } from "../viewer/MidasPreview";
+import { MidasEQGraph } from "../viewer/MidasEQGraph";
 import { DigicoPreview } from "../viewer/DigicoPreview";
 import type { ConsoleId } from "./types";
 import { readFileAsText } from "../../shared/utils/file";
@@ -19,6 +20,8 @@ export function UploadPage() {
   const [error, setError] = useState<string | null>(null);
 
   const [midasPreview, setMidasPreview] = useState<MidasSession | null>(null);
+  const [midasSelectedCh, setMidasSelectedCh] = useState<number | null>(null);
+
   const [digicoSession, setDigicoSession] = useState<DigicoSession | null>(null);
 
   const handleFileSelected = async (selected: File) => {
@@ -26,6 +29,7 @@ export function UploadPage() {
     setError(null);
     setContent(null);
     setMidasPreview(null);
+    setMidasSelectedCh(null);
     setDigicoSession(null);
 
     try {
@@ -34,11 +38,14 @@ export function UploadPage() {
         setContent(text);
         const parsed = parseMidasText(text);
         setMidasPreview(parsed);
-      } else if (consoleId === "DIGICO") {
-        // For DiGiCo we don’t bother with raw text, it’s binary SQLite.
+        return;
+      }
+
+      if (consoleId === "DIGICO") {
         const db = await openDigicoDbFromFile(selected);
         const session = parseDigicoSession(db);
         setDigicoSession(session);
+        return;
       }
     } catch (e) {
       console.error(e);
@@ -56,11 +63,20 @@ export function UploadPage() {
       </section>
 
       <section>
-        {/* RawViewer mostly useful for Midas text files */}
         <RawViewer consoleId={consoleId} file={file} content={content} />
 
         {consoleId === "MIDAS" && midasPreview && (
-          <MidasPreview preview={midasPreview} />
+          <>
+            <MidasPreview
+              preview={midasPreview}
+              selectedChannel={midasSelectedCh}
+              onSelectChannel={setMidasSelectedCh}
+            />
+            <MidasEQGraph
+              preview={midasPreview}
+              selectedChannel={midasSelectedCh}
+            />
+          </>
         )}
 
         {consoleId === "DIGICO" && digicoSession && (

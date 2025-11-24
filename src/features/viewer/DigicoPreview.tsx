@@ -1,3 +1,4 @@
+import React from "react";
 import type { DigicoSession } from "../../consoles/digico/types";
 
 interface Props {
@@ -76,50 +77,22 @@ export function DigicoPreview({ session }: Props) {
                   ? "-"
                   : `Th ${g.threshold} | Rng ${g.range} | Atk ${g.attack} | Hold ${g.hold} | Rel ${g.release}`;
 
+              const baseCell: React.CSSProperties = {
+                padding: "0.35rem 0.6rem",
+                borderTop: "1px solid #1e293b",
+              };
+
               return (
                 <tr key={ch.channelNumber}>
-                  <td
-                    style={{
-                      padding: "0.35rem 0.6rem",
-                      borderTop: "1px solid #1e293b",
-                    }}
-                  >
-                    {ch.channelNumber}
-                  </td>
-                  <td
-                    style={{
-                      padding: "0.35rem 0.6rem",
-                      borderTop: "1px solid #1e293b",
-                    }}
-                  >
-                    {ch.name || "-"}
-                  </td>
-                  <td
-                    style={{
-                      padding: "0.35rem 0.6rem",
-                      borderTop: "1px solid #1e293b",
-                    }}
-                  >
-                    {ch.preampGain ?? "-"} dB
-                  </td>
-                  <td style={{ padding: "0.35rem 0.6rem", borderTop: "1px solid #1e293b" }}>
-                    {eqCell(1)}
-                  </td>
-                  <td style={{ padding: "0.35rem 0.6rem", borderTop: "1px solid #1e293b" }}>
-                    {eqCell(2)}
-                  </td>
-                  <td style={{ padding: "0.35rem 0.6rem", borderTop: "1px solid #1e293b" }}>
-                    {eqCell(3)}
-                  </td>
-                  <td style={{ padding: "0.35rem 0.6rem", borderTop: "1px solid #1e293b" }}>
-                    {eqCell(4)}
-                  </td>
-                  <td style={{ padding: "0.35rem 0.6rem", borderTop: "1px solid #1e293b" }}>
-                    {compText}
-                  </td>
-                  <td style={{ padding: "0.35rem 0.6rem", borderTop: "1px solid #1e293b" }}>
-                    {gateText}
-                  </td>
+                  <td style={baseCell}>{ch.channelNumber}</td>
+                  <td style={baseCell}>{ch.name || "-"}</td>
+                  <td style={baseCell}>{ch.preampGain ?? "-"} dB</td>
+                  <td style={baseCell}>{eqCell(1)}</td>
+                  <td style={baseCell}>{eqCell(2)}</td>
+                  <td style={baseCell}>{eqCell(3)}</td>
+                  <td style={baseCell}>{eqCell(4)}</td>
+                  <td style={baseCell}>{compText}</td>
+                  <td style={baseCell}>{gateText}</td>
                 </tr>
               );
             })}
