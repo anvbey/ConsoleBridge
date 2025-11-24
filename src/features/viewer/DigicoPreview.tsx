@@ -3,9 +3,15 @@ import type { DigicoSession } from "../../consoles/digico/types";
 
 interface Props {
   session: DigicoSession;
+  selectedChannel?: number | null;
+  onSelectChannel?: (chNum: number) => void;
 }
 
-export function DigicoPreview({ session }: Props) {
+export function DigicoPreview({
+  session,
+  selectedChannel,
+  onSelectChannel,
+}: Props) {
   const channels = session.channels ?? [];
 
   if (channels.length === 0) {
@@ -77,13 +83,24 @@ export function DigicoPreview({ session }: Props) {
                   ? "-"
                   : `Th ${g.threshold} | Rng ${g.range} | Atk ${g.attack} | Hold ${g.hold} | Rel ${g.release}`;
 
+              const isSelected = selectedChannel === ch.channelNumber;
+
               const baseCell: React.CSSProperties = {
                 padding: "0.35rem 0.6rem",
                 borderTop: "1px solid #1e293b",
+                background: isSelected ? "#111827" : "transparent",
+              };
+
+              const handleClick = () => {
+                onSelectChannel && onSelectChannel(ch.channelNumber);
               };
 
               return (
-                <tr key={ch.channelNumber}>
+                <tr
+                  key={ch.channelNumber}
+                  onClick={handleClick}
+                  style={{ cursor: onSelectChannel ? "pointer" : "default" }}
+                >
                   <td style={baseCell}>{ch.channelNumber}</td>
                   <td style={baseCell}>{ch.name || "-"}</td>
                   <td style={baseCell}>{ch.preampGain ?? "-"} dB</td>

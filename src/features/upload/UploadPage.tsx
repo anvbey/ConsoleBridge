@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ConsoleSelect } from "./components/ConsoleSelect";
 import { FileInput } from "./components/FileInput";
 import { RawViewer } from "../viewer/RawViewer";
 import { MidasPreview } from "../viewer/MidasPreview";
 import { MidasEQGraph } from "../viewer/MidasEQGraph";
 import { DigicoPreview } from "../viewer/DigicoPreview";
+import { DigicoEQGraph } from "../viewer/DigicoEQGraph";
 import type { ConsoleId } from "./types";
 import { readFileAsText } from "../../shared/utils/file";
 import type { MidasSession } from "../../consoles/midas/types";
@@ -23,28 +24,44 @@ export function UploadPage() {
   const [midasSelectedCh, setMidasSelectedCh] = useState<number | null>(null);
 
   const [digicoSession, setDigicoSession] = useState<DigicoSession | null>(null);
+  const [digicoSelectedCh, setDigicoSelectedCh] = useState<number | null>(null);
 
   const handleFileSelected = async (selected: File) => {
     setFile(selected);
     setError(null);
     setContent(null);
+
     setMidasPreview(null);
     setMidasSelectedCh(null);
     setDigicoSession(null);
+    setDigicoSelectedCh(null);
 
     try {
+      // MIDAS text scene
       if (consoleId === "MIDAS") {
         const text = await readFileAsText(selected);
         setContent(text);
+
         const parsed = parseMidasText(text);
         setMidasPreview(parsed);
+
+        // Optional: select first channel by default
+        if (parsed.channels.length > 0) {
+          setMidasSelectedCh(parsed.channels[0].index);
+        }
         return;
       }
 
+      // DiGiCo .session (SQLite)
       if (consoleId === "DIGICO") {
         const db = await openDigicoDbFromFile(selected);
         const session = parseDigicoSession(db);
         setDigicoSession(session);
+
+        // Optional: select first channel by default
+        if (session.channels.length > 0) {
+          setDigicoSelectedCh(session.channels[0].channelNumber);
+        }
         return;
       }
     } catch (e) {
@@ -63,6 +80,7 @@ export function UploadPage() {
       </section>
 
       <section>
+        {/* Raw viewer is useful for Midas text files */}
         <RawViewer consoleId={consoleId} file={file} content={content} />
 
         {consoleId === "MIDAS" && midasPreview && (
@@ -80,7 +98,17 @@ export function UploadPage() {
         )}
 
         {consoleId === "DIGICO" && digicoSession && (
-          <DigicoPreview session={digicoSession} />
+          <>
+            <DigicoPreview
+              session={digicoSession}
+              selectedChannel={digicoSelectedCh}
+              onSelectChannel={setDigicoSelectedCh}
+            />
+            <DigicoEQGraph
+              session={digicoSession}
+              selectedChannel={digicoSelectedCh}
+            />
+          </>
         )}
       </section>
     </div>
