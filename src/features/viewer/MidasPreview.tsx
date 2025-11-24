@@ -1,4 +1,3 @@
-import React from "react";
 import type { MidasSession } from "../../consoles/midas/types";
 
 interface Props {

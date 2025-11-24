@@ -1,5 +1,5 @@
 // src/consoles/digico/openDb.ts
-import initSqlJs, { Database } from "sql.js";
+import initSqlJs, { type Database } from "sql.js";
 
 // Open a DiGiCo .session file (SQLite) into a sql.js Database
 export async function openDigicoDbFromFile(file: File): Promise<Database> {

@@ -195,7 +195,7 @@ export function parseMidasText(text: string): MidasSession {
             threshold: Number.isNaN(threshold) ? null : threshold,
             range: Number.isNaN(range) ? null : range,
             attack: Number.isNaN(attack) ? null : attack,
-            hold: Number.isNaN ? null : hold,
+            hold: Number.isNaN(hold) ? null : hold,
             release: Number.isNaN(release) ? null : release,
           };
         }
