@@ -1,0 +1,81 @@
+/* src/styles/app.css */
+.app-root {
+  font-family: system-ui, sans-serif;
+  min-height: 100vh;
+  min-width: 100vw;
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+.app-header {
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #1f2937;
+}
+
+.app-main {
+  padding: 1.5rem 2rem;
+}
+
+.upload-page {
+  display: grid;
+  grid-template-columns: minmax(0, 350px) minmax(0, 1fr);
+  gap: 1.5rem;
+}
+
+.upload-panel,
+.viewer-panel {
+  background: #020617;
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid #1e293b;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.field-label {
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+  color: #9ca3af;
+}
+
+.field-input {
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.5rem;
+  border: 1px solid #334155;
+  background: #020617;
+  color: #e5e7eb;
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: #38bdf8;
+}
+
+.raw-viewer h2 {
+  margin-bottom: 0.5rem;
+}
+
+.raw-meta {
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+}
+
+.raw-content {
+  background: #020617;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  border: 1px solid #1e293b;
+  font-size: 0.8rem;
+  max-height: 400px;
+  overflow: auto;
+}
+
+.error {
+  margin-top: 0.5rem;
+  color: #f97373;
+  font-size: 0.85rem;
+}
