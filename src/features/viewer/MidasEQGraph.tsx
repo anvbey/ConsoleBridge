@@ -1,4 +1,3 @@
-import React from "react";
 import type { MidasSession } from "../../consoles/midas/types";
 import { EQGraph, type EQBandPoint } from "./EQGraph";
 import { parseMidasFreq } from "../../consoles/midas/utils";

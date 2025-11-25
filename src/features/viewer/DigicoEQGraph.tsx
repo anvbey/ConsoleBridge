@@ -1,4 +1,3 @@
-import React from "react";
 import type { DigicoSession } from "../../consoles/digico/types";
 import { EQGraph } from "./EQGraph";
 import type { EQBandPoint } from "./EQGraph";

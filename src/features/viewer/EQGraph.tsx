@@ -1,5 +1,3 @@
-import React from "react";
-
 export interface EQBandPoint {
   freqHz: number;
   gainDb: number;
@@ -29,9 +27,6 @@ export function EQGraph({ bands, title }: Props) {
 
   const xScale = (f: number) => {
     const clamped = Math.min(maxFreq, Math.max(minFreq, f || minFreq));
-    const t =
-      (log10(clamped) - log10(minFreq)) /
-      (log10(maxFreq) - log10(maxFreq / (maxFreq / minFreq))); // small trick, but works
     const denom = log10(maxFreq) - log10(minFreq);
     const tt = denom === 0 ? 0 : (log10(clamped) - log10(minFreq)) / denom;
     return padding.left + tt * innerWidth;
